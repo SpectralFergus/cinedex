@@ -19,9 +19,9 @@ import static org.mockito.Mockito.when;
 public class FlicksPresenterTest {
 
     private static List<Flick> FLICKS = Arrays.asList(
-            new Flick("Title1", "Description1"),
-            new Flick("Title2", "Description2"));
-
+            new Flick(9104, 245891, false, 7.1, "John Wick", 41.334,"/5vHssUeVe25bMrof1HyaPyWgaP.jpg", "en", "John Wick", "\"28\",\"53\"", "/umC04Cozevu8nn3JTDJ1pc7PVTn.jpg", false, "Ex-hitman John Wick comes out of retirement to track down the gangsters that took everything from him.", "2014-10-22")
+//            ,new Flick("Title2", "Description2"));
+    );
     private FlicksPresenter mFlicksPresenter;
     @Mock
     private FlickRepository mFlickRepository;
