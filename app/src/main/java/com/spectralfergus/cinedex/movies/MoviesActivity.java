@@ -15,17 +15,5 @@ public class MoviesActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie);
-
-        if (savedInstanceState == null) {
-            initFragment(MoviesFragment.newInstance());
-        }
-    }
-
-    private void initFragment(Fragment notesFragment) {
-        // Add the NotesFragment to the layout
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction transaction = fragmentManager.beginTransaction();
-        transaction.add(R.id.contentFrame, notesFragment);
-        transaction.commit();
     }
 }

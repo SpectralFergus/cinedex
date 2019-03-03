@@ -24,5 +24,5 @@ public interface TMDBMovieDao {
     void deleteAllCards();
 
     @Query("SELECT * FROM movie_table ORDER BY id")
-    LiveData<List<TMDBMovie>> getAllCards();
+    List<TMDBMovie> getAllCards();
 }
