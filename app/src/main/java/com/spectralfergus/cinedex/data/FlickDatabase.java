@@ -9,16 +9,16 @@ import androidx.room.Room;
 import androidx.room.RoomDatabase;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
-@Database(entities = {TMDBMovie.class}, version = 1)
-public abstract class TMDBMovieDatabase extends RoomDatabase {
-    private static TMDBMovieDatabase instance;
+@Database(entities = {Flick.class}, version = 1)
+public abstract class FlickDatabase extends RoomDatabase {
+    private static FlickDatabase instance;
 
-    public abstract TMDBMovieDao tmdbMovieDao();
+    public abstract FlickDao tmdbMovieDao();
 
-    public static synchronized TMDBMovieDatabase getInstance(Context context) {
+    public static synchronized FlickDatabase getInstance(Context context) {
         if (instance == null) {
             instance = Room.databaseBuilder(context.getApplicationContext(),
-                    TMDBMovieDatabase.class, "movie_database")
+                    FlickDatabase.class, "movie_database")
                     .fallbackToDestructiveMigration()
                     .addCallback(roomCallback)
                     .build();
@@ -35,14 +35,14 @@ public abstract class TMDBMovieDatabase extends RoomDatabase {
     };
 
     private static class PopulateDbAsyncTask extends AsyncTask<Void, Void, Void> {
-        private TMDBMovieDao movieDao;
-        public PopulateDbAsyncTask(TMDBMovieDatabase db) {
-            this.movieDao = db.tmdbMovieDao();
+        private FlickDao flickDao;
+        public PopulateDbAsyncTask(FlickDatabase db) {
+            this.flickDao = db.tmdbMovieDao();
         }
 
         @Override
         protected Void doInBackground(Void... voids) {
-            //todo: Instantiate date for the first time
+            //todo: Instantiate db for the first time
             return null;
         }
     }
