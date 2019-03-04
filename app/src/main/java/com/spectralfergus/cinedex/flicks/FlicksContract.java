@@ -6,6 +6,7 @@ import java.util.List;
 
 import androidx.annotation.NonNull;
 
+// failed first attempt to implement MVP architecture
 public interface FlicksContract {
     interface View {
 

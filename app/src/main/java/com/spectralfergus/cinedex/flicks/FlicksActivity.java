@@ -16,7 +16,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -24,7 +23,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public class FlicksActivity extends AppCompatActivity {
     private static final String TAG = FlicksActivity.class.getSimpleName();
-    private static final int NUM_COLS = 3;
+    private static final int NUM_COLS = 3; // todo: dynamically change cols w/ screen size
 
     public interface FlickItemListener {
         void onFlickClick(Flick clickedMovie);

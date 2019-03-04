@@ -7,21 +7,18 @@ import java.util.List;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
 
 public class FlickViewModel extends AndroidViewModel {
     private FlickRepository repository;
     private LiveData<List<Flick>> FlickList;
-    private MutableLiveData<Integer> iSelected;
 
     public FlickViewModel(@NonNull Application application) {
         super(application);
         repository = new FlickRepository(application);
         FlickList = repository.getFlickList();
-        iSelected = new MutableLiveData<>();
         if (FlickList.getValue() == null || FlickList.getValue().size() <= 0) {
             deleteAllFlicks();
-            fetchFlicks("");
+            fetchFlicks("todo: replace with url and custom params");
         }
     }
 
