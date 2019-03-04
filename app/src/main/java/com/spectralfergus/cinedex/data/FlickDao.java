@@ -24,7 +24,7 @@ public interface FlickDao {
     void deleteAllCards();
 
     @Query("SELECT * FROM flick_table ORDER BY id")
-    List<Flick> getAllMovies();
+    List<Flick> getAllFlicks();
 
     @Query("Select * FROM flick_table WHERE id=:id")
     Flick getMovie(int id);

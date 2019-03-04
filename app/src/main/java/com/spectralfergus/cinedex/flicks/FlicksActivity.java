@@ -1,29 +1,38 @@
 package com.spectralfergus.cinedex.flicks;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.spectralfergus.cinedex.R;
 import com.spectralfergus.cinedex.data.Flick;
+import com.spectralfergus.cinedex.data.FlickRepository;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 public class FlicksActivity extends AppCompatActivity implements FlicksContract.View {
+    private static final int NUM_COLS = 3;
+
+    public interface FlickItemListener {
+        void onFlickClick(Flick clickedMovie);
+    }
 
     private FlicksContract.UserActionsListener mActionsListener;
-    private MoviesAdapter mMoviesAdapter;
+    private FlicksAdapter mFlicksAdapter;
 
-    MovieItemListener mItemListener = new MovieItemListener() {
+    FlickItemListener mItemListener = new FlickItemListener() {
         @Override
-        public void onMovieClick(Flick clickedMovie) {
+        public void onFlickClick(Flick clickedMovie) {
             mActionsListener.openFlickDetails(clickedMovie);
         }
     };
@@ -33,8 +42,21 @@ public class FlicksActivity extends AppCompatActivity implements FlicksContract.
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie);
 
-        mMoviesAdapter = new MoviesAdapter(new ArrayList<Flick>(), mItemListener);
-//        mActionsListener = new FlicksPresenter(Injection.provideNotesRepository(), this);
+        mFlicksAdapter = new FlicksAdapter(new ArrayList<Flick>(), mItemListener);
+        mActionsListener = new FlicksPresenter(new FlickRepository(getApplication()), this);
+
+        RecyclerView mRecyclerView = findViewById(R.id.rv_movies_list);
+        mRecyclerView.setAdapter(mFlicksAdapter);
+        mRecyclerView.setHasFixedSize(true);
+        mRecyclerView.setLayoutManager(new GridLayoutManager(this, NUM_COLS));
+
+        mActionsListener.loadFlicks(true);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mActionsListener.loadFlicks(false);
     }
 
     @Override
@@ -44,48 +66,44 @@ public class FlicksActivity extends AppCompatActivity implements FlicksContract.
 
     @Override
     public void showFlicks(List<Flick> flicks) {
-
-    }
-
-    @Override
-    public void showAddFlick() {
-
+        mFlicksAdapter.replaceData(flicks);
     }
 
     @Override
     public void showFlickDetailUi(String flickId) {
-
+//        Intent intent = new Intent(getApplicationContext(), FlickDetailActivity.class);
+//        intent.putExtra(FlickDetailActivity.EXTRA_FLICK_ID, flickId);
+//        startActivity(intent);
     }
 
-    private static class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ViewHolder> {
+    private static class FlicksAdapter extends RecyclerView.Adapter<FlicksAdapter.ViewHolder> {
 
-        private List<Flick> mMovies;
-        private MovieItemListener mItemListener;
+        private List<Flick> mMovies = new ArrayList<>(); // avoids NullPointerExceptions
+        private FlickItemListener mItemListener;
 
-        public MoviesAdapter(List<Flick> movies, MovieItemListener itemListener) {
+        public FlicksAdapter(List<Flick> movies, FlickItemListener itemListener) {
             setList(movies);
             mItemListener = itemListener;
         }
 
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            Context context = parent.getContext();
-            LayoutInflater inflater = LayoutInflater.from(context);
-            View MovieView = inflater.inflate(R.layout.movie_item, parent, false);
+            View MovieView = LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.movie_item, parent, false);
 
             return new ViewHolder(MovieView, mItemListener);
         }
 
         @Override
         public void onBindViewHolder(ViewHolder viewHolder, int position) {
-            Flick movie = mMovies.get(position);
-
+            Flick curFlick = mMovies.get(position);
+            viewHolder.bind(curFlick);
             //        viewHolder.title.setText(Movie.getTitle());
             //        viewHolder.description.setText(Movie.getDescription());
         }
 
-        public void replaceData(List<Flick> movies) {
-            setList(movies);
+        public void replaceData(List<Flick> flicks) {
+            setList(flicks);
             notifyDataSetChanged();
         }
 
@@ -105,31 +123,34 @@ public class FlicksActivity extends AppCompatActivity implements FlicksContract.
         public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
             public TextView title;
-
             public TextView description;
-            private MovieItemListener mItemListener;
+            public ImageView poster;
 
-            public ViewHolder(View itemView, MovieItemListener listener) {
+            private FlickItemListener mItemListener;
+
+            public ViewHolder(View itemView, FlickItemListener listener) {
                 super(itemView);
                 mItemListener = listener;
                 //            title = (TextView) itemView.findViewById(R.id.movie_detail_title);
                 //            description = (TextView) itemView.findViewById(R.id.movie_detail_description);
+                poster = itemView.findViewById(R.id.poster_image_view);
                 itemView.setOnClickListener(this);
+            }
+
+            private void bind(Flick curFlick) {
+                poster.setImageDrawable(null);
+//                Glide.with(itemView.getContext())
+//                        .load("https://image.tmdb.org/t/p/w500/iiZZdoQBEYBv6id8su7ImL0oCbD.jpg").into(poster);
             }
 
             @Override
             public void onClick(View v) {
                 int position = getAdapterPosition();
                 Flick movie = getItem(position);
-                mItemListener.onMovieClick(movie);
+                mItemListener.onFlickClick(movie);
 
             }
         }
-
-    }
-
-    public interface MovieItemListener {
-        void onMovieClick(Flick clickedMovie);
     }
 }
 

@@ -13,12 +13,12 @@ import androidx.sqlite.db.SupportSQLiteDatabase;
 public abstract class FlickDatabase extends RoomDatabase {
     private static FlickDatabase instance;
 
-    public abstract FlickDao tmdbMovieDao();
+    public abstract FlickDao flickDao();
 
     public static synchronized FlickDatabase getInstance(Context context) {
         if (instance == null) {
             instance = Room.databaseBuilder(context.getApplicationContext(),
-                    FlickDatabase.class, "movie_database")
+                    FlickDatabase.class, "flick_database")
                     .fallbackToDestructiveMigration()
                     .addCallback(roomCallback)
                     .build();
@@ -37,7 +37,7 @@ public abstract class FlickDatabase extends RoomDatabase {
     private static class PopulateDbAsyncTask extends AsyncTask<Void, Void, Void> {
         private FlickDao flickDao;
         public PopulateDbAsyncTask(FlickDatabase db) {
-            this.flickDao = db.tmdbMovieDao();
+            this.flickDao = db.flickDao();
         }
 
         @Override

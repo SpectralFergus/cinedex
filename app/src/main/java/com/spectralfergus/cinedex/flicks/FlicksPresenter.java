@@ -26,11 +26,6 @@ public class FlicksPresenter implements FlicksContract.UserActionsListener {
     }
 
     @Override
-    public void addNewFlick() {
-
-    }
-
-    @Override
     public void openFlickDetails(@NonNull Flick requestedFlick) {
 
     }

@@ -1,5 +1,7 @@
 package com.spectralfergus.cinedex.data;
 
+import android.app.Application;
+
 import java.util.List;
 
 import androidx.annotation.NonNull;
@@ -8,6 +10,12 @@ public class FlickRepository {
 
     private FlickDao flickDao;
     private List<Flick> flickList;
+
+    public FlickRepository(Application application) {
+        FlickDatabase db = FlickDatabase.getInstance(application);
+        flickDao = db.flickDao();
+        flickList = flickDao.getAllFlicks();
+    }
 
     interface LoadFlicksCallback {
         void onNotesLoaded(List<Flick> flicks);

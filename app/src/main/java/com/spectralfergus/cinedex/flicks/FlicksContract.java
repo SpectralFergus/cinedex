@@ -13,16 +13,12 @@ public interface FlicksContract {
 
         void showFlicks(List<Flick> flicks);
 
-        void showAddFlick();
-
         void showFlickDetailUi(String flickId);
     }
 
     interface UserActionsListener {
 
         void loadFlicks(boolean forceUpdate);
-
-        void addNewFlick();
 
         void openFlickDetails(@NonNull Flick requestedNote);
     }
