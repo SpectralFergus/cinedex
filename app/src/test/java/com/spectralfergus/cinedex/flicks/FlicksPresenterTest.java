@@ -1,7 +1,5 @@
 package com.spectralfergus.cinedex.flicks;
 
-import android.graphics.Movie;
-
 import com.spectralfergus.cinedex.data.Flick;
 import com.spectralfergus.cinedex.data.FlickRepository;
 
@@ -21,21 +19,28 @@ import static org.mockito.Mockito.when;
 
 public class FlicksPresenterTest {
 
+    private static Flick flickSpiderVerse = new Flick(
+            2176,324857,false,8.5,
+            "Spider-Man: Into the Spider-Verse",276.205,
+            "/iiZZdoQBEYBv6id8su7ImL0oCbD.jpg","en",
+            "Spider-Man: Into the Spider-Verse","[28,12,16,878,35]",
+            "/uUiId6cG32JSRI6RyBQSvQtLjz2.jpg",false,
+            "Miles Morales is juggling his life between being a high school student and being a spider-man. When Wilson \"Kingpin\" Fisk uses a super collider, others from across the Spider-Verse are transported to this dimension.",
+            "2018-12-07"
+    );
     private static Flick flickJohnWick = new Flick(9104, 245891, false, 7.1, "John Wick", 41.334,"/5vHssUeVe25bMrof1HyaPyWgaP.jpg", "en", "John Wick", "\"28\",\"53\"", "/umC04Cozevu8nn3JTDJ1pc7PVTn.jpg", false, "Ex-hitman John Wick comes out of retirement to track down the gangsters that took everything from him.", "2014-10-22");
 
-
     private static List<Flick> FLICKS = Arrays.asList(
+            flickSpiderVerse,
             flickJohnWick
-//            ,new Flick("Title2", "Description2"));
     );
-    private FlicksPresenter mFlicksPresenter;
+
     @Mock
     private FlickRepository mFlickRepository;
     @Mock
     private FlicksContract.View mFlicksView;
 
-//    @Captor
-//    private ArgumentCaptor<>
+    private FlicksPresenter mFlicksPresenter;
 
     @Before
     public void setupMoviesPresenter() {
