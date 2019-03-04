@@ -1,7 +1,5 @@
 package com.spectralfergus.cinedex.flicks;
 
-import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,31 +7,36 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.spectralfergus.cinedex.R;
 import com.spectralfergus.cinedex.data.Flick;
-import com.spectralfergus.cinedex.data.FlickRepository;
+import com.spectralfergus.cinedex.data.FlickViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-public class FlicksActivity extends AppCompatActivity implements FlicksContract.View {
+public class FlicksActivity extends AppCompatActivity {
+    private static final String TAG = FlicksActivity.class.getSimpleName();
     private static final int NUM_COLS = 3;
 
     public interface FlickItemListener {
         void onFlickClick(Flick clickedMovie);
     }
 
-    private FlicksContract.UserActionsListener mActionsListener;
     private FlicksAdapter mFlicksAdapter;
+    private FlickViewModel mFlickModel;
 
     FlickItemListener mItemListener = new FlickItemListener() {
         @Override
         public void onFlickClick(Flick clickedMovie) {
-            mActionsListener.openFlickDetails(clickedMovie);
+            //todo: go to Details Screen
         }
     };
 
@@ -43,34 +46,27 @@ public class FlicksActivity extends AppCompatActivity implements FlicksContract.
         setContentView(R.layout.activity_movie);
 
         mFlicksAdapter = new FlicksAdapter(new ArrayList<Flick>(), mItemListener);
-        mActionsListener = new FlicksPresenter(new FlickRepository(getApplication()), this);
 
         RecyclerView mRecyclerView = findViewById(R.id.rv_movies_list);
         mRecyclerView.setAdapter(mFlicksAdapter);
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(new GridLayoutManager(this, NUM_COLS));
 
-        mActionsListener.loadFlicks(true);
+        mFlickModel = ViewModelProviders.of(this).get(FlickViewModel.class);
+        mFlickModel.getFlickList().observe(this, new Observer<List<Flick>>() {
+            @Override
+            public void onChanged(List<Flick> flicks) {
+                showFlicks(flicks);
+            }
+        });
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        mActionsListener.loadFlicks(false);
-    }
-
-    @Override
-    public void setProgressIndicator(boolean active) {
-
-    }
-
-    @Override
     public void showFlicks(List<Flick> flicks) {
         mFlicksAdapter.replaceData(flicks);
     }
 
-    @Override
     public void showFlickDetailUi(String flickId) {
+        //todo: go to details screen
 //        Intent intent = new Intent(getApplicationContext(), FlickDetailActivity.class);
 //        intent.putExtra(FlickDetailActivity.EXTRA_FLICK_ID, flickId);
 //        startActivity(intent);
@@ -80,6 +76,7 @@ public class FlicksActivity extends AppCompatActivity implements FlicksContract.
 
         private List<Flick> mMovies = new ArrayList<>(); // avoids NullPointerExceptions
         private FlickItemListener mItemListener;
+        private static final String POSTER_BASE_URL = "https://image.tmdb.org/t/p/w500";
 
         public FlicksAdapter(List<Flick> movies, FlickItemListener itemListener) {
             setList(movies);
@@ -108,7 +105,7 @@ public class FlicksActivity extends AppCompatActivity implements FlicksContract.
         }
 
         private void setList(List<Flick> movies) {
-            mMovies = (movies != null) ? movies : new ArrayList<Flick>();
+            if (movies != null) mMovies = movies;
         }
 
         @Override
@@ -139,8 +136,8 @@ public class FlicksActivity extends AppCompatActivity implements FlicksContract.
 
             private void bind(Flick curFlick) {
                 poster.setImageDrawable(null);
-//                Glide.with(itemView.getContext())
-//                        .load("https://image.tmdb.org/t/p/w500/iiZZdoQBEYBv6id8su7ImL0oCbD.jpg").into(poster);
+                Glide.with(itemView.getContext())
+                        .load(POSTER_BASE_URL+curFlick.getPoster_path()).into(poster);
             }
 
             @Override

@@ -2,6 +2,7 @@ package com.spectralfergus.cinedex.data;
 
 import java.util.List;
 
+import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
@@ -21,11 +22,11 @@ public interface FlickDao {
     void delete(Flick movie);
 
     @Query("DELETE FROM flick_table")
-    void deleteAllCards();
+    void deleteAllFlicks();
 
     @Query("SELECT * FROM flick_table ORDER BY id")
-    List<Flick> getAllFlicks();
+    LiveData<List<Flick>> getAllFlicks();
 
     @Query("Select * FROM flick_table WHERE id=:id")
-    Flick getMovie(int id);
+    Flick getFlick(int id);
 }
