@@ -117,7 +117,7 @@ public class FlickRepository {
 
     // === NETWORK LOGIC TO RETRIEVE CARD DATA ===
     private static class FetchFlicksFromURLAsyncTask extends AsyncTask<String, Void, Void> {
-        private static final String URI_BASE = "https://api.themoviedb.org/3/discover/movie?primary_release_date.gte=2014-09-15&primary_release_date.lte=2014-10-22&page=1&api_key=64b6f3a69e5717b13ed8a56fe4417e71";
+        private static final String URI_BASE = "https://api.themoviedb.org/"; //3/discover/movie?primary_release_date.gte=2014-09-15&primary_release_date.lte=2014-10-22&page=1&api_key=64b6f3a69e5717b13ed8a56fe4417e71";
         FlickDao flickDao;
 
         private FetchFlicksFromURLAsyncTask(FlickDao flickDao) {
@@ -130,11 +130,13 @@ public class FlickRepository {
             String urlString = String.valueOf(strings[0]);
             Uri uri = Uri.parse(URI_BASE)
                     .buildUpon()
-//                    .appendPath("3/discover/movie")
-//                    .appendQueryParameter("primary_release_date.gte", 2014-09-15)
-//                    .appendQueryParameter("primary_release_date.lte", 2014-10-22)
-//                    .appendQueryParameter("page", 1)
-//                    .appendQueryParameter("api_key", 64b6f3a69e5717b13ed8a56fe4417e71)
+                    .appendPath("3")
+                    .appendPath("discover")
+                    .appendPath("movie")
+                    .appendQueryParameter("primary_release_date.gte", "2014-09-15")
+                    .appendQueryParameter("primary_release_date.lte", "2014-10-22")
+                    .appendQueryParameter("page", "1")
+                    .appendQueryParameter("api_key", "64b6f3a69e5717b13ed8a56fe4417e71")
                     .build();
             URL url = null;
             try {
